@@ -1,15 +1,17 @@
 package lat.jbluesoft.demofx.models;
 
+import java.math.BigDecimal;
+
 public class Product {
 
     private int idProduct;
     private String name;
     private String description;
-    private double price;
+    private Double price;
 
     public Product(){}
 
-    public Product(int idProduct, String name, String description, double price) {
+    public Product(int idProduct, String name, String description, Double price) {
         this.idProduct = idProduct;
         this.name = name;
         this.description = description;
@@ -40,11 +42,11 @@ public class Product {
         this.description = description;
     }
 
-    public double getPrice() {
+    public Double getPrice() {
         return price;
     }
 
-    public void setPrice(double price) {
+    public void setPrice(Double price) {
         this.price = price;
     }
 }
