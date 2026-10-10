@@ -1,20 +1,21 @@
 package lat.jbluesoft.demofx;
 
 import javafx.application.Application;
-import javafx.beans.Observable;
+import javafx.beans.property.ReadOnlyObjectWrapper;
+import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
-import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import lat.jbluesoft.demofx.models.Product;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
+
 
 public class HelloApplication extends Application {
 
@@ -30,23 +31,44 @@ public class HelloApplication extends Application {
         TableView<Product> tableView = new TableView<>();
 
         TableColumn<Product, Integer> idColumn = new TableColumn<>("ID");
-        idColumn.setCellValueFactory(new PropertyValueFactory<>("idProduct"));
-
         TableColumn<Product, String> nameColumn = new TableColumn<>("NAME");
-        nameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
-
         TableColumn<Product, String> desColumn = new TableColumn<>("DESCRIPTION");
-        desColumn.setCellValueFactory(new PropertyValueFactory<>("description"));
-
         TableColumn<Product, Double> priceColumn = new TableColumn<>("PRICE");
-        priceColumn.setCellValueFactory(new PropertyValueFactory<>("price"));
 
-        tableView.getColumns().addAll(idColumn,nameColumn,desColumn,priceColumn);
+        idColumn.setCellValueFactory(cell -> new ReadOnlyObjectWrapper<>(cell.getValue().getIdProduct()));
+        nameColumn.setCellValueFactory(cell -> new ReadOnlyStringWrapper(cell.getValue().getName()));
+        desColumn.setCellValueFactory(cell -> new ReadOnlyStringWrapper(cell.getValue().getDescription()));
+        priceColumn.setCellValueFactory(cell -> new ReadOnlyObjectWrapper<>(cell.getValue().getPrice()));
+
+        TableColumn<Product, Void> deleteColumn = new TableColumn<>("delete");
+        deleteColumn.setCellFactory(param -> new TableCell<>(){
+            private final Button deleteButton = new Button("DELETE");
+            {
+                deleteButton.setOnAction(event -> {
+                    Product product = getTableView().getItems().get(getIndex());
+                    tableView.getItems().remove(product);
+                });
+            }
+
+            @Override
+            protected void updateItem(Void item, boolean empty) {
+               super.updateItem(item, empty);
+               if (empty){
+                   setGraphic(null);
+               }else {
+                   setGraphic(deleteButton);
+               }
+            }
+        });
+
+
+
+        tableView.getColumns().addAll(idColumn,nameColumn,desColumn,priceColumn, deleteColumn);
         tableView.setItems(this.products);
 
         VBox vBox = new VBox(tableView);
-        Scene scene = new Scene(vBox, 320, 240);
-        stage.setTitle("Hello!");
+        Scene scene = new Scene(vBox, 640, 400);
+        stage.setTitle("Gestión de Productos");
         stage.setScene(scene);
         stage.show();
     }
