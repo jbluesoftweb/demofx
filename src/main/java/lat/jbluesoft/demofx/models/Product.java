@@ -7,11 +7,11 @@ public class Product {
     private int idProduct;
     private String name;
     private String description;
-    private Double price;
+    private BigDecimal price;
 
     public Product(){}
 
-    public Product(int idProduct, String name, String description, Double price) {
+    public Product(int idProduct, String name, String description, BigDecimal price) {
         this.idProduct = idProduct;
         this.name = name;
         this.description = description;
@@ -42,11 +42,11 @@ public class Product {
         this.description = description;
     }
 
-    public Double getPrice() {
+    public BigDecimal getPrice() {
         return price;
     }
 
-    public void setPrice(Double price) {
+    public void setPrice(BigDecimal price) {
         this.price = price;
     }
 }

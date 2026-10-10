@@ -15,14 +15,15 @@ import javafx.stage.Stage;
 import lat.jbluesoft.demofx.models.Product;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 
 
 public class HelloApplication extends Application {
 
     private ObservableList<Product> products = FXCollections.observableArrayList(
-        new Product(1,"Laptop HP", "Marca HP",2000.0),
-        new Product(2,"Macbook Pro", "Marca apple",10000.0),
-        new Product(3,"Iphone 14 Pro Max", "Marca apple",5000.0)
+        new Product(1,"Laptop HP", "Marca HP",new BigDecimal("2000.0")),
+        new Product(2,"Macbook Pro", "Marca apple",new BigDecimal("10000.0")),
+        new Product(3,"Iphone 14 Pro Max", "Marca apple",new BigDecimal("5000.0"))
     );
 
     @Override
@@ -33,7 +34,7 @@ public class HelloApplication extends Application {
         TableColumn<Product, Integer> idColumn = new TableColumn<>("Codigo");
         TableColumn<Product, String> nameColumn = new TableColumn<>("Nombre");
         TableColumn<Product, String> desColumn = new TableColumn<>("Descripción");
-        TableColumn<Product, Double> priceColumn = new TableColumn<>("Precio");
+        TableColumn<Product, BigDecimal> priceColumn = new TableColumn<>("Precio");
 
         idColumn.setCellValueFactory(cell -> new ReadOnlyObjectWrapper<>(cell.getValue().getIdProduct()));
         nameColumn.setCellValueFactory(cell -> new ReadOnlyStringWrapper(cell.getValue().getName()));
