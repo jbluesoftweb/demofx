@@ -14,8 +14,19 @@ public class ProductRepository {
             new Product(3, "Iphone 14 Pro Max", "Marca apple", new BigDecimal("5000.00"))
     ));
 
+    private int nextId = products.stream()
+            .mapToInt(Product::getIdProduct)
+            .max()
+            .orElse(0) +1;
+
     public List<Product> findAll() {
         return List.copyOf(products);
+    }
+
+    public Product save(Product product){
+        product.setIdProduct(nextId++);
+        products.add(product);
+        return product;
     }
 
     public void deleteById(int idProduct) {

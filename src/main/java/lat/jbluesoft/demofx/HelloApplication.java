@@ -14,6 +14,12 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import lat.jbluesoft.demofx.models.Product;
 import lat.jbluesoft.demofx.repository.ProductRepository;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
+import javafx.geometry.Insets;
+import java.math.RoundingMode;
 
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -28,6 +34,7 @@ public class HelloApplication extends Application {
 
     @Override
     public void start(Stage stage) throws IOException {
+
         products.setAll(repository.findAll());
 
         TableView<Product> tableView = new TableView<>();
@@ -66,13 +73,65 @@ public class HelloApplication extends Application {
 
 
 
-        tableView.getColumns().addAll(idColumn,nameColumn,desColumn,priceColumn, deleteColumn);
-        tableView.setItems(this.products);
+        tableView.getColumns().addAll(idColumn, nameColumn, desColumn, priceColumn, deleteColumn);
+        tableView.setItems(products);
 
-        VBox vBox = new VBox(tableView);
-        Scene scene = new Scene(vBox, 640, 400);
+        TextField nameField = new TextField();
+        nameField.setPromptText("Nombre");
+        TextField descriptionField = new TextField();
+        descriptionField.setPromptText("Descripción");
+        TextField priceField = new TextField();
+        priceField.setPromptText("Precio (ej. 1500.50)");
+        Button addButton = new Button("Agregar");
+        Label messageLabel = new Label();
+
+        HBox.setHgrow(nameField, Priority.ALWAYS);
+        HBox.setHgrow(descriptionField, Priority.ALWAYS);
+
+        addButton.setOnAction(event -> {
+            String name = nameField.getText().trim();
+            String description = descriptionField.getText().trim();
+
+            if (name.isEmpty()) {
+                messageLabel.setText("El nombre es obligatorio.");
+                return;
+            }
+
+            BigDecimal price;
+            try {
+                price = new BigDecimal(priceField.getText().trim());
+            } catch (NumberFormatException e) {
+                messageLabel.setText("El precio no es un número válido.");
+                return;
+            }
+            if (price.signum() <= 0) {
+                messageLabel.setText("El precio debe ser mayor que 0.");
+                return;
+            }
+
+            repository.save(new Product(0, name, description, price.setScale(2, RoundingMode.HALF_UP)));
+            refreshProducts();
+
+            nameField.clear();
+            descriptionField.clear();
+            priceField.clear();
+            messageLabel.setText("");
+            nameField.requestFocus();
+        });
+
+        HBox form = new HBox(8, nameField, descriptionField, priceField, addButton);
+
+        VBox root = new VBox(8, form, messageLabel, tableView);
+        root.setPadding(new Insets(10));
+        VBox.setVgrow(tableView, Priority.ALWAYS);
+
+        Scene scene = new Scene(root, 760, 420);
         stage.setTitle("Gestión de Productos");
         stage.setScene(scene);
         stage.show();
+    }
+
+    private void refreshProducts() {
+        products.setAll(repository.findAll());
     }
 }
