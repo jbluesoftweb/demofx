@@ -20,12 +20,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.geometry.Insets;
 import java.math.RoundingMode;
-import javafx.geometry.Insets;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Priority;
-import java.math.RoundingMode;
+
 
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -106,17 +101,6 @@ public class HelloApplication extends Application {
 
         tableView.getColumns().addAll(idColumn, nameColumn, desColumn, priceColumn, editColumn, deleteColumn);
         tableView.setItems(products);
-
-
-        nameField.setPromptText("Nombre");
-        descriptionField.setPromptText("Descripción");
-        priceField.setPromptText("Precio (ej. 1500.50)");
-
-
-        HBox.setHgrow(nameField, Priority.ALWAYS);
-        HBox.setHgrow(descriptionField, Priority.ALWAYS);
-
-
 
         nameField.setPromptText("Nombre");
         descriptionField.setPromptText("Descripción");
